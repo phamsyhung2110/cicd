@@ -1,6 +1,5 @@
 pipeline {
-  agent { label "kubeagent"}
-     
+  agent any 
   environment {
     registry = "phamsyhung1110"
     registryCredential = 'docker-hub-credential'
