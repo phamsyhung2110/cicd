@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'jk-k8s' }
+  agent { label 'kubeagent' }
   environment {
     registry = "https://hub.docker.com/repository/docker/phamsyhung1110/testjenkins/general"
     registryCredential = 'docker-hub-credential'
