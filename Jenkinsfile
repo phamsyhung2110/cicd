@@ -1,41 +1,44 @@
 pipeline {
-    agent any
-    environment{
-        DOCKER_TAG = getDockerTag()
-        NEXUS_URL  = "172.31.34.232:8080"
-        IMAGE_URL_WITH_TAG = "${NEXUS_URL}/node-app:${DOCKER_TAG}"
+  agent { label 'jk-k8s' }
+  environment {
+    registry = "https://hub.docker.com/repository/docker/phamsyhung1110/testjenkins/general"
+    registryCredential = 'docker-hub-credential'
+    DOCKERHUB_TOKEN = credentials('docker-hub-credential')
+    dockerhub_user = 'phamsyhung1110'
+    imageName = "nodejs-app-jenkins"
+    containerPort = 8080
+    k8sNamespace = 'devops-tools'
+  }
+  stages {
+    // stage('Checkout') {
+    //   steps {
+    //     checkout([$class: 'GitSCM', 
+    //               branches: [[name: 'test']], 
+    //               userRemoteConfigs: [[url: 'https://github.com/your-github-repo.git']]])
+    //   }
+    // }
+    stage('Build and Push Image') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+          script {
+            sh '''
+              docker build -t $registry/$imageName:$BUILD_NUMBER .
+              docker login -u $dockerhub_user -p $DOCKERHUB_TOKEN
+              docker push $registry/$imageName:$BUILD_NUMBER
+            '''
+          }
+        }
+      }
     }
-    stages{
-        stage('Build Docker Image'){
-            steps{
-                sh "docker build . -t ${IMAGE_URL_WITH_TAG}"
-            }
+    stage('Deploy to Kubernetes') {
+      steps {
+        withKubeConfig([credentialsId: 'jenkins-kubernetes-token']) {
+          sh '''
+            kubectl set image deployment/$imageName $imageName=$registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
+            kubectl rollout status deployment/$imageName -n $k8sNamespace
+          '''
         }
-        stage('Nexus Push'){
-            steps{
-                withCredentials([string(credentialsId: 'nexus-pwd', variable: 'nexusPwd')]) {
-                    sh "docker login -u admin -p ${nexusPwd} ${NEXUS_URL}"
-                    sh "docker push ${IMAGE_URL_WITH_TAG}"
-                }
-            }
-        }
-        stage('Docker Deploy Dev'){
-            steps{
-                sshagent(['tomcat-dev']) {
-                    withCredentials([string(credentialsId: 'nexus-pwd', variable: 'nexusPwd')]) {
-                        sh "ssh ec2-user@172.31.0.38 docker login -u admin -p ${nexusPwd} ${NEXUS_URL}"
-                    }
-					// Remove existing container, if container name does not exists still proceed with the build
-					sh script: "ssh ec2-user@172.31.0.38 docker rm -f nodeapp",  returnStatus: true
-                    
-                    sh "ssh ec2-user@172.31.0.38 docker run -d -p 8080:8080 --name nodeapp ${IMAGE_URL_WITH_TAG}"
-                }
-            }
-        }
+      }
     }
-}
-
-def getDockerTag(){
-    def tag  = sh script: 'git rev-parse HEAD', returnStdout: true
-    return tag
+  }
 }
