@@ -18,9 +18,9 @@ pipeline {
     //   }
     // }
     stage('Build and Push Image') {
-        when {
-                branch 'jenkins-test'
-            }
+        // when {
+        //         branch 'jenkins-test'
+        //     }
         steps {
             withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
             script {
@@ -34,9 +34,9 @@ pipeline {
         }
     }
     stage('Deploy to Kubernetes') {
-        when {
-                branch 'jenkins-test'
-            }
+        // when {
+        //         branch 'jenkins-test'
+        //     }
         steps {
             withKubeConfig([credentialsId: 'jenkins-kubernetes-token']) {
             sh '''
