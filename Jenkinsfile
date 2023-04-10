@@ -18,27 +18,33 @@ pipeline {
     //   }
     // }
     stage('Build and Push Image') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-          script {
-            sh '''
-              docker build -t $registry/$imageName:$BUILD_NUMBER .
-              docker login -u $dockerhub_user -p $DOCKERHUB_TOKEN
-              docker push $registry/$imageName:$BUILD_NUMBER
-            '''
-          }
+        when {
+                branch 'jenkins-test'
+            }
+        steps {
+            withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+            script {
+                sh '''
+                docker build -t $registry/$imageName:$BUILD_NUMBER .
+                docker login -u $dockerhub_user -p $DOCKERHUB_TOKEN
+                docker push $registry/$imageName:$BUILD_NUMBER
+                '''
+            }
+            }
         }
-      }
     }
     stage('Deploy to Kubernetes') {
-      steps {
-        withKubeConfig([credentialsId: 'jenkins-kubernetes-token']) {
-          sh '''
-            kubectl set image deployment/$imageName $imageName=$registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
-            kubectl rollout status deployment/$imageName -n $k8sNamespace
-          '''
+        when {
+                branch 'jenkins-test'
+            }
+        steps {
+            withKubeConfig([credentialsId: 'jenkins-kubernetes-token']) {
+            sh '''
+                kubectl set image deployment/$imageName $imageName=$registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
+                kubectl rollout status deployment/$imageName -n $k8sNamespace
+            '''
+            }
         }
-      }
     }
   }
 }
