@@ -38,7 +38,7 @@ pipeline {
         //         branch 'jenkins-test'
         //     }
         steps {
-            withKubeConfig([credentialsId: 'jenkins-kubernetes-token']) {
+            withKubeConfig([credentialsId: 'jk-k8s']) {
             sh '''
                kubectl run jenkins-deploy --image $registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
             '''
