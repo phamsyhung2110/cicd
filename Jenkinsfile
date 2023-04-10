@@ -38,9 +38,8 @@ pipeline {
         //         branch 'jenkins-test'
         //     }
         steps {
-            withKubeCredentials([kubectlCredentials: 'jenkins-kubernetes-token']) {
+            withKubeConfig([credentialsId: 'jenkins-kubernetes-token']) {
             sh '''
-                kubectl get nodes
                 kubectl set image deployment/$imageName $imageName=$registry/$imageName:$BUILD_NUMBER -n $namespace
                 kubectl rollout status deployment/$imageName -n $namespace
             '''
