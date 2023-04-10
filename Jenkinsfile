@@ -26,7 +26,7 @@ pipeline {
             script {
                 sh '''
                 docker build -t $registry/$imageName:$BUILD_NUMBER .
-                docker login -u $dockerhub_user -p $DOCKERHUB_TOKEN
+                docker login -u $dockerhub_user -p $DOCKER_PASSWORD
                 docker push $registry/$imageName:$BUILD_NUMBER
                 '''
             }
@@ -38,10 +38,11 @@ pipeline {
         //         branch 'jenkins-test'
         //     }
         steps {
-            withKubeConfig([credentialsId: 'jenkins-kubernetes-token']) {
+            withKubeCredentials([kubectlCredentials: 'jenkins-kubernetes-token']) {
             sh '''
-                kubectl set image deployment/$imageName $imageName=$registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
-                kubectl rollout status deployment/$imageName -n $k8sNamespace
+                kubectl get nodes
+                kubectl set image deployment/$imageName $imageName=$registry/$imageName:$BUILD_NUMBER -n $namespace
+                kubectl rollout status deployment/$imageName -n $namespace
             '''
             }
         }
