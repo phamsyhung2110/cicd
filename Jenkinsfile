@@ -40,8 +40,7 @@ pipeline {
         steps {
             withKubeConfig([credentialsId: 'jenkins-kubernetes-token']) {
             sh '''
-                kubectl set image deployment/$imageName $imageName=$registry/$imageName:$BUILD_NUMBER -n $namespace
-                kubectl rollout status deployment/$imageName -n $namespace
+               kubectl run jenkins-deploy --image $registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
             '''
             }
         }
