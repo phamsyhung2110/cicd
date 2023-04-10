@@ -1,5 +1,5 @@
 pipeline {
-  agent { labels "kubeagent"}
+  agent { label "kubeagent"}
      
   environment {
     registry = "phamsyhung1110"
