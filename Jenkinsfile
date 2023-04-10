@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    registry = "https://hub.docker.com/repository/docker/phamsyhung1110/testjenkins/general"
+    registry = "phamsyhung1110"
     registryCredential = 'docker-hub-credential'
     DOCKERHUB_TOKEN = credentials('docker-hub-credential')
     dockerhub_user = 'phamsyhung1110'
