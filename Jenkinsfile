@@ -4,7 +4,6 @@ pipeline {
             cloud 'kubernetes'
           }
     }
-  }
   environment {
     registry = "phamsyhung1110"
     registryCredential = 'docker-hub-credential'
