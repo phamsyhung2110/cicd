@@ -10,7 +10,7 @@ pipeline {
     DOCKERHUB_TOKEN = credentials('docker-hub-credential')
     dockerhub_user = 'phamsyhung1110'
     imageName = "nodejs-app-jenkins"
-    containerPort = 8080
+    containerPort = 50000
     k8sNamespace = 'devops-tools'
   }
   stages {
@@ -29,9 +29,9 @@ pipeline {
             withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
             script {
                 sh '''
-                docker build -t $registry/$imageName:$BUILD_NUMBER .
-                docker login -u $dockerhub_user -p $DOCKER_PASSWORD
-                docker push $registry/$imageName:$BUILD_NUMBER
+                sudo docker build -t $registry/$imageName:$BUILD_NUMBER .
+                sudo docker login -u $dockerhub_user -p $DOCKER_PASSWORD
+                sudo docker push $registry/$imageName:$BUILD_NUMBER
                 '''
             }
             }
@@ -44,7 +44,7 @@ pipeline {
         steps {
             withKubeConfig([credentialsId: 'jk-k8s']) {
             sh '''
-               kubectl run jenkins-deploy --image $registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
+                kubectl run jenkins-deploy --image $registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
             '''
             }
         }
