@@ -32,12 +32,15 @@ pipeline {
         }
     }
     stage('Run ansible playbook') {
-      agent any
-      sh '''
-        rsync -avz --checksum ./ansible/dev.inventory ubuntu@10.0.0.76:/home/ubuntu/dev.inventory
-        rsync -avz --checksum ./ansible/docker-deploy.yaml ubuntu@10.0.0.76:/home/ubuntu/docker-deploy.yaml
-        ssh ubuntu@10.0.0.76 "ansible-playbook -i /home/ubuntu/dev.inventory docker-deploy.yml"
-      '''
+        agent any
+        steps {
+          sh '''
+          rsync -avz --checksum ./ansible/dev.inventory ubuntu@10.0.0.76:/home/ubuntu/dev.inventory
+          rsync -avz --checksum ./ansible/docker-deploy.yaml ubuntu@10.0.0.76:/home/ubuntu/docker-deploy.yaml
+          ssh ubuntu@10.0.0.76 "ansible-playbook -i /home/ubuntu/dev.inventory docker-deploy.yml"
+        '''
+        }
+        
     }
     stage('Deploy to Kubernetes') {
         agent {
