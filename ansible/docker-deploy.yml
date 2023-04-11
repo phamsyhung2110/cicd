@@ -4,11 +4,11 @@
   become: True
   tasks:
     - name: install pip
-      yum:
+      apt:
         name: python-pip
         state: present
     - name: install docker
-      yum:
+      apt:
         name: docker
         state: present
     - name: start docker service
