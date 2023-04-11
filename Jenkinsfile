@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent none
   // agent {
   //   kubernetes {
   //           cloud 'kubernetes'
@@ -11,17 +11,10 @@ pipeline {
     DOCKERHUB_TOKEN = credentials('docker-hub-credential')
     dockerhub_user = 'phamsyhung1110'
     imageName = "nodejs-app-jenkins"
-    containerPort = 50000
     k8sNamespace = 'devops-tools'
   }
   stages {
-    // stage('Checkout') {
-    //   steps {
-    //     checkout([$class: 'GitSCM', 
-    //               branches: [[name: 'test']], 
-    //               userRemoteConfigs: [[url: 'https://github.com/your-github-repo.git']]])
-    //   }
-    // }
+    agent any
     stage('Build and Push Image') {
         // when {
         //         branch 'jenkins-test'
@@ -42,11 +35,23 @@ pipeline {
         agent {
           kubernetes {
                   cloud 'kubernetes'
+                  defaultContainer 'kubectl'
+                  yaml """
+                  apiVersion: v1
+                  kind: Pod
+                  metadata:
+                    labels:
+                      app: jenkins-deploy
+                  spec:
+                    containers:
+                    - name: kubectl
+                      image: bitnami/kubectl
+                      command:
+                      - sleep
+                      - infinity
+                  """
           }
       }
-        // when {
-        //         branch 'jenkins-test'
-        //     }
         steps {
             withKubeConfig([credentialsId: 'jk-k8s']) {
             sh '''
