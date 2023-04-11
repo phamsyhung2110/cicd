@@ -1,1 +1,1 @@
-172.31.12.137 ansible_user=ec2-user ansible_connection=ssh
+10.0.0.6 ansible_user=ubuntu ansible_connection=ssh

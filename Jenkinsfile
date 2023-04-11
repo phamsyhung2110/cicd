@@ -35,6 +35,7 @@ pipeline {
         agent any
         steps {
           sh '''
+          sed -i 's/$BUILD_NUMBER/abc/g' ./ansible/dev.inventory
           rsync -avz --checksum ./ansible/dev.inventory ubuntu@10.0.0.76:/home/ubuntu/dev.inventory
           rsync -avz --checksum ./ansible/docker-deploy.yaml ubuntu@10.0.0.76:/home/ubuntu/docker-deploy.yaml
           ssh ubuntu@10.0.0.76 "ansible-playbook -i /home/ubuntu/dev.inventory docker-deploy.yml"
