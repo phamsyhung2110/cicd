@@ -14,8 +14,8 @@ pipeline {
     k8sNamespace = 'devops-tools'
   }
   stages {
-    agent any
     stage('Build and Push Image') {
+        agent any
         // when {
         //         branch 'jenkins-test'
         //     }
