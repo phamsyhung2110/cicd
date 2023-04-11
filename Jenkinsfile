@@ -37,8 +37,8 @@ pipeline {
           sshagent(['ssh-agent-ansible']) {
             sh '''
               sed -i 's/node-app:.*/node-app:$BUILD_NUMBER/g' ./ansible/dev.inventory
-              rsync -i /home/ubuntu/.ssh/id_rsa.pub -avz --checksum ./ansible/dev.inventory ubuntu@10.0.0.76:/home/ubuntu/dev.inventory
-              rsync -i /home/ubuntu/.ssh/id_rsa.pub -avz --checksum ./ansible/docker-deploy.yaml ubuntu@10.0.0.76:/home/ubuntu/docker-deploy.yaml
+              rsync -i /home/ubuntu/.ssh/id_rsa.pub -avz --checksum -e "ssh -o StrictHostKeyChecking=no" ./ansible/dev.inventory ubuntu@10.0.0.76:/home/ubuntu/dev.inventory
+              rsync -i /home/ubuntu/.ssh/id_rsa.pub -avz --checksum -e "ssh -o StrictHostKeyChecking=no" ./ansible/docker-deploy.yaml ubuntu@10.0.0.76:/home/ubuntu/docker-deploy.yaml
               ssh ubuntu@10.0.0.76 "ansible-playbook -i /home/ubuntu/dev.inventory docker-deploy.yml"
             '''
           }
