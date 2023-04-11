@@ -30,9 +30,9 @@ pipeline {
             withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
             script {
                 sh '''
-                sudo docker build -t $registry/$imageName:$BUILD_NUMBER .
-                sudo docker login -u $dockerhub_user -p $DOCKER_PASSWORD
-                sudo docker push $registry/$imageName:$BUILD_NUMBER
+                docker build -t $registry/$imageName:$BUILD_NUMBER .
+                docker login -u $dockerhub_user -p $DOCKER_PASSWORD
+                docker push $registry/$imageName:$BUILD_NUMBER
                 '''
             }
             }
