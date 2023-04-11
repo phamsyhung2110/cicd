@@ -60,7 +60,7 @@ pipeline {
                       serviceAccountName: jenkins-admin
                       containers:
                       - name: jnlp
-                        image: phamsyhung1110/jenkins-agent:2.0
+                        image: phamsyhung1110/jenkins-agent:3.0
                     '''
           }
       }
