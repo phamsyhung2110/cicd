@@ -68,7 +68,7 @@ pipeline {
           container('jnlp') {
             // withKubeConfig([credentialsId: 'jk-k8s']) {
             sh '''
-                sed -i "s/tag:.*/tag:$BUILD_NUMBER/g" ./helm/node-app/values.yaml
+                sed -i "s/tag:.*/tag: $BUILD_NUMBER/g" ./helm/node-app/values.yaml
                 helm upgrade --install node-app ./helm/node-app/ -n $k8sNamespace
             '''
             // }
