@@ -41,7 +41,7 @@ pipeline {
                     metadata:
                       namespace: devops-tools
                     spec:
-                      serviceaccount: jenkins-admin
+                      serviceAccountName: jenkins-admin
                       containers:
                       - name: jnlp
                         image: phamsyhung1110/jenkins-agent:2.0
