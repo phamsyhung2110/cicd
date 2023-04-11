@@ -50,11 +50,11 @@ pipeline {
       }
         steps {
           container('jnlp') {
-            withKubeConfig([credentialsId: 'jk-k8s']) {
+            // withKubeConfig([credentialsId: 'jk-k8s']) {
             sh '''
                 kubectl run jenkins-deploy --image $registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
             '''
-            }
+            // }
           }
             
         }
