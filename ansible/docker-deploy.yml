@@ -20,7 +20,7 @@
     #   pip:
     #     name: docker-py
     #     state: present
-    - name: Create  container
+    - name: Create container
       docker_container:
         name: nodeapp
         image: phamsyhung1110/node-app:{{tag}}

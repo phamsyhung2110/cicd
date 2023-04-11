@@ -37,6 +37,7 @@ pipeline {
           sshagent(['ssh-agent-ansible']) {
             sh '''
               sed -i 's/node-app:.*/node-app:$BUILD_NUMBER/g' ./ansible/dev.inventory
+              cat ./ansible/dev.inventory
               ls -la
               rsync -avz --checksum  ./ansible/docker-deploy.yml ubuntu@10.0.0.76:/home/ubuntu/docker-deploy.yml
               ssh ubuntu@10.0.0.76 "ansible-playbook  docker-deploy.yml"
