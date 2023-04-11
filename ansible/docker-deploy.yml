@@ -1,6 +1,6 @@
 ---
 
-- hosts: 172.31.12.137
+- hosts: localhost
   become: True
   tasks:
     # - name: install pip
