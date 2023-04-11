@@ -38,7 +38,7 @@ pipeline {
             sh '''
               sed -i 's/node-app:.*/node-app:$BUILD_NUMBER/g' ./ansible/dev.inventory
               ls -la
-              rsync -i /home/ubuntu/.ssh/id_rsa.pub -avz --checksum -e "ssh -o StrictHostKeyChecking=no" ./ansible/docker-deploy.yaml ubuntu@10.0.0.76:/home/ubuntu/docker-deploy.yaml
+              rsync -avz --checksum  ./ansible/docker-deploy.yaml ubuntu@10.0.0.76:/home/ubuntu/docker-deploy.yml
               ssh ubuntu@10.0.0.76 "ansible-playbook  docker-deploy.yml"
             '''
           }
