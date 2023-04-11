@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: kammana/appone
+  repository: phamsyhung1110/node-app
   tag: v1
   pullPolicy: IfNotPresent
 
@@ -13,8 +13,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 service:
-  type: LoadBalancer
-  port: 80
+  type: NodePort
+  port: 31000
 
 ingress:
   enabled: false

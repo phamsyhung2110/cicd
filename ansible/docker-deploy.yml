@@ -21,7 +21,7 @@
     #     name: docker-py
     #     state: present
     - name: Create container
-      command: docker run -d -p 8080:8080 phamsyhung1110/node-app:{{tag}}
+      command: sudo docker run -d -p 8080:8080 phamsyhung1110/node-app:{{tag}}
       # docker_container:
       #   name: nodeapp
       #   image: phamsyhung1110/node-app:{{tag}}

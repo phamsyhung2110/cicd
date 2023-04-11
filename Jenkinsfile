@@ -68,7 +68,8 @@ pipeline {
           container('jnlp') {
             // withKubeConfig([credentialsId: 'jk-k8s']) {
             sh '''
-                kubectl run jenkins-deploy --image $registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
+                sed -i "s/tag:.*/tag:$BUILD_NUMBER/g" ./helm/node-app/values.yaml
+                helm upgrade --install node-app ./helm/node-app/ -n $k8sNamespace
             '''
             // }
           }
