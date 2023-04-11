@@ -35,14 +35,38 @@ pipeline {
         agent {
           kubernetes {
                   cloud 'kubernetes'
+                  yaml '''
+                    apiVersion: v1
+                    kind: Pod
+                    spec:
+                      containers:
+                      - name: dotnet
+                        image: mcr.microsoft.com/dotnet/sdk:5.0
+                        command:
+                        - cat
+                        tty: true
+                      - name: docker
+                        image: docker:dind
+                        tty: true
+                        securityContext:
+                        privileged: true
+                      - name: kubectl
+                        image: bitnami/kubectl
+                        command:
+                        - "sleep"
+                        - "240"
+                        tty: true
+                    '''
           }
       }
         steps {
+          container('kubectl') {
             withKubeConfig([credentialsId: 'jk-k8s']) {
             sh '''
                 kubectl run jenkins-deploy --image $registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
             '''
             }
+          }
         }
     }
   }
