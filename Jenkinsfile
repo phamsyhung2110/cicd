@@ -40,16 +40,6 @@ pipeline {
                     kind: Pod
                     spec:
                       containers:
-                      - name: dotnet
-                        image: mcr.microsoft.com/dotnet/sdk:5.0
-                        command:
-                        - cat
-                        tty: true
-                      - name: docker
-                        image: docker:dind
-                        tty: true
-                        securityContext:
-                        privileged: true
                       - name: kubectl
                         image: bitnami/kubectl
                         command:
