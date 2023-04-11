@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent none
   // agent {
   //   kubernetes {
   //           cloud 'kubernetes'
@@ -32,12 +32,28 @@ pipeline {
         }
     }
     stage('Deploy to Kubernetes') {
+        agent {
+          kubernetes {
+                  cloud 'kubernetes'
+                  yaml '''
+                    apiVersion: v1
+                    kind: Pod
+                    spec:
+                      containers:
+                      - name: jnlp
+                        image: phamsyhung1110/jenkins-agent:2.0
+                    '''
+          }
+      }
         steps {
+          container('jnlp') {
             withKubeConfig([credentialsId: 'jk-k8s']) {
             sh '''
                 kubectl run jenkins-deploy --image $registry/$imageName:$BUILD_NUMBER -n $k8sNamespace
             '''
             }
+          }
+            
         }
     }
   }
