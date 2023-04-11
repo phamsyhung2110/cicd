@@ -1,9 +1,10 @@
 pipeline {
-  agent {
-    kubernetes {
-            cloud 'kubernetes'
-          }
-    }
+  agent any
+  // agent {
+  //   kubernetes {
+  //           cloud 'kubernetes'
+  //         }
+  //   }
   environment {
     registry = "phamsyhung1110"
     registryCredential = 'docker-hub-credential'
@@ -38,6 +39,11 @@ pipeline {
         }
     }
     stage('Deploy to Kubernetes') {
+        agent {
+          kubernetes {
+                  cloud 'kubernetes'
+          }
+      }
         // when {
         //         branch 'jenkins-test'
         //     }
