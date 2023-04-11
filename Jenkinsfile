@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent any
   // agent {
   //   kubernetes {
   //           cloud 'kubernetes'
@@ -32,23 +32,6 @@ pipeline {
         }
     }
     stage('Deploy to Kubernetes') {
-        agent {
-          kubernetes {
-                  cloud 'kubernetes'
-                  // yaml '''
-                  //   apiVersion: v1
-                  //   kind: Pod
-                  //   spec:
-                  //     containers:
-                  //     - name: kubectl
-                  //       image: bitnami/kubectl
-                  //       command:
-                  //       - "sleep"
-                  //       - "240"
-                  //       tty: true
-                  //   '''
-          }
-      }
         steps {
             withKubeConfig([credentialsId: 'jk-k8s']) {
             sh '''
