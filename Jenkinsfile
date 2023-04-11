@@ -39,6 +39,7 @@ pipeline {
                     apiVersion: v1
                     kind: Pod
                     spec:
+                      serviceaccount: jenkins-admin
                       containers:
                       - name: jnlp
                         image: phamsyhung1110/jenkins-agent:2.0
