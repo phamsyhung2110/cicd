@@ -35,21 +35,6 @@ pipeline {
         agent {
           kubernetes {
                   cloud 'kubernetes'
-                  defaultContainer 'kubectl'
-                  yaml """
-                  apiVersion: v1
-                  kind: Pod
-                  metadata:
-                    labels:
-                      app: jenkins-deploy
-                  spec:
-                    containers:
-                    - name: kubectl
-                      image: bitnami/kubectl
-                      command:
-                      - sleep
-                      - infinity
-                  """
           }
       }
         steps {
