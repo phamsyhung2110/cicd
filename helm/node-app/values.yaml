@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: phamsyhung1110/node-app-jenkins
+  repository: phamsyhung1110/nodejs-app-jenkins
   tag: v1
   pullPolicy: IfNotPresent
 

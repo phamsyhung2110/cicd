@@ -36,7 +36,7 @@ pipeline {
         steps {
           sshagent(['ssh-agent-ansible']) {
             sh '''
-              sed -i "s/node-app-jenkins:.*/node-app-jenkins:$BUILD_NUMBER/g" ./ansible/docker-deploy.yml
+              sed -i "s/nodejs-app-jenkins:.*/nodejs-app-jenkins:$BUILD_NUMBER/g" ./ansible/docker-deploy.yml
               cat ./ansible/docker-deploy.yml
               ls -la
               rsync -avz --checksum  ./ansible/docker-deploy.yml ubuntu@10.0.0.76:/home/ubuntu/docker-deploy.yml
